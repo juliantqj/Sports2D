@@ -1,0 +1,14 @@
+### STEP 1 ###
+open Powershell
+cd sports2d
+
+
+### STEP 2 ###
+ipython
+
+
+### STEP 3 ###
+from Sports2D import Sports2D
+Sports2D.process('Config_demo.toml')
+
+

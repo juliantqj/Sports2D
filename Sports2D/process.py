@@ -1365,7 +1365,7 @@ def process_fun(config_dict, video_file, time_range, frame_rate, result_dir):
     else:
         video_file_path = video_dir / video_file
         video_file_stem = video_file.stem
-        output_dir_name = f'{video_file_stem}_Sports2D'    
+        output_dir_name = f'{video_file_stem}_Sports2D'
     output_dir = result_dir / output_dir_name
     img_output_dir = output_dir / f'{output_dir_name}_img'
     vid_output_path = output_dir / f'{output_dir_name}.mp4'
@@ -1588,9 +1588,39 @@ def process_fun(config_dict, video_file, time_range, frame_rate, result_dir):
                 if save_angles:
                     all_frames_angles.append([])
                 continue
-            else: # does not store all frames in memory if they are not saved or used for ordering
-                if save_img or save_vid or person_ordering_method == 'on_click':
-                    frames.append(frame.copy())
+            else:
+                cv2.putText(frame, f"Press 'q' to quit", (cam_width-int(400*fontSize), cam_height-20), cv2.FONT_HERSHEY_SIMPLEX, fontSize+0.2, (255,255,255), thickness+1, cv2.LINE_AA)
+                cv2.putText(frame, f"Press 'q' to quit", (cam_width-int(400*fontSize), cam_height-20), cv2.FONT_HERSHEY_SIMPLEX, fontSize+0.2, (0,0,255), thickness, cv2.LINE_AA)
+
+                frame_number_text = "Frame: " + str(int(frame_count))
+
+                # Determine the text size
+                text_font = cv2.FONT_HERSHEY_SIMPLEX
+                text_scale = 1
+                text_thickness = 2
+                (text_width, text_height), _ = cv2.getTextSize(frame_number_text, text_font, text_scale, text_thickness)
+
+                # Add padding around the text
+                background_padding_x = 10  # Adjust the padding around the text horizontally as needed
+                background_padding_y = 5  # Adjust the padding around the text vertically as needed
+
+                # Calculate background size based on text size and padding
+                background_width = text_width + 2 * background_padding_x
+                background_height = text_height + 2 * background_padding_y
+
+                # Add a white background behind the text
+                background_color = (255, 255, 255)  # White
+                background_position_frame = (50, 50)  # Adjust the background position as needed
+                background_start = (background_position_frame[0], background_position_frame[1])
+                background_end = (background_start[0] + background_width, background_start[1] + background_height)
+                cv2.rectangle(frame, background_start, background_end, background_color, -1)
+
+                # Add the frame number text
+                text_position_frame = (background_position_frame[0] + background_padding_x, background_position_frame[1] + text_height + background_padding_y)
+                text_color = (0, 0, 255)  # Red (B,G,R) convention
+
+                cv2.putText(frame, frame_number_text, text_position_frame, text_font, text_scale, text_color, text_thickness, cv2.LINE_AA)
+
 
             # Retrieve pose or Estimate pose and track people
             if load_trc_px: 

@@ -117,22 +117,23 @@ from pathlib import Path
 import logging, logging.handlers
 import cv2
 import numpy as np
-
+import os
 from Sports2D import Sports2D
 
 
 ## CONSTANTS
-DEFAULT_CONFIG =   {'base': {'video_input': ['demo.mp4'],
-                                'nb_persons_to_detect': 'all',
-                                'person_ordering_method': 'on_click',
-                                'first_person_height': 1.65,
-                                'visible_side': ['auto', 'front', 'none'],
+DEFAULT_CONFIG =   {'project': {'video_input': '',
+                                'px_to_m_from_person_id': 2,
+                                'px_to_m_person_height': 1.65,
+                                'visible_side': ['front', 'auto'],
                                 'load_trc_px': '',
                                 'compare': False,
                                 'time_range': [],
                                 'video_dir': '',
                                 'webcam_id': 0,
-                                'input_size': [1280, 720],
+                                'input_size': [1920, 1080]
+                                },
+                    'process': {'multiperson': True,
                                 'show_realtime_results': True,
                                 'save_vid': True,
                                 'save_img': True,
@@ -335,6 +336,8 @@ def base_params(config_dict):
 
     result_dir = config_dict.get('base').get('result_dir')
     if result_dir == '': result_dir = Path.cwd()
+    if not os.path.exists(result_dir):
+        os.makedirs(result_dir)
     else: result_dir = Path(result_dir).resolve()
 
     # video_files, frame_rates, time_ranges
